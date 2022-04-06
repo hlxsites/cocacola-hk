@@ -460,6 +460,61 @@ export function decoratePictures(main) {
 }
 
 /**
+ * Build figcaption element
+ * @param {Element} p The original element to be placed in figcaption.
+ * @returns figCaptionEl Generated figcaption
+ */
+export function buildCaption(p) {
+  const figCaptionEl = document.createElement('figcaption');
+  p.classList.add('caption');
+  figCaptionEl.append(p);
+  return figCaptionEl;
+}
+
+/**
+ * Build figure element
+ * @param {Element} block The original element to be placed in figure.
+ * @returns figEl Generated figure
+ */
+export function buildFigure(block) {
+  const figure = document.createElement('figure');
+  figure.classList.add('figure');
+  block.childNodes.forEach((child) => {
+    const clone = child.cloneNode(true);
+    // picture, video, or embed link is NOT wrapped in P tag
+    if (clone.nodeName === 'PICTURE' || clone.nodeName === 'VIDEO' || clone.nodeName === 'A') {
+      figure.prepend(clone);
+    } else {
+      // content wrapped in P tag(s)
+      const picture = clone.querySelector('picture');
+      if (picture) {
+        figure.prepend(picture);
+      }
+      const video = clone.querySelector('video');
+      if (video) {
+        figure.prepend(video);
+      }
+      const caption = clone.querySelector('em');
+      if (caption) {
+        const figCaption = buildCaption(caption);
+        figure.append(figCaption);
+      }
+      const link = clone.querySelector('a');
+      if (link) {
+        const img = figure.querySelector('picture') || figure.querySelector('video');
+        if (img) {
+          // wrap picture or video in A tag
+          link.textContent = '';
+          link.append(img);
+        }
+        figure.prepend(link);
+      }
+    }
+  });
+  return figure;
+}
+
+/**
  * Adds the favicon.
  * @param {string} href The favicon URL
  */
@@ -544,13 +599,21 @@ document.addEventListener('click', () => sampleRUM('click'));
 
 loadPage(document);
 
+export function decorateIcons(main) {
+  main.querySelectorAll('.icon').forEach((img) => {
+    const { pathname } = new URL(img.src);
+    img.src = `${window.hlx.codeBasePath}${pathname}`;
+  });
+}
+
 export async function lookupPages(pathnames) {
   if (!window.pageIndex) {
-    const resp = await fetch('/query-index.json');
+    const resp = await fetch(`${window.hlx.codeBasePath}/query-index.json`);
     const json = await resp.json();
     const lookup = {};
     json.data.forEach((row) => {
       lookup[row.path] = row;
+      if (row.image || row.image.startsWith('/default-meta-image.png')) row.image = `/${window.hlx.codeBasePath}${row.image}`;
     });
     window.pageIndex = { data: json.data, lookup };
   }
@@ -566,10 +629,13 @@ function decorateBrandStyle(main) {
 }
 
 function setTheme() {
+  console.log('setting theme');
   const theme = getMetadata('theme');
   if (theme) {
     const themeClass = toClassName(theme);
     document.body.classList.add(themeClass);
+  } else if (window.location.pathname.includes('/news/')) {
+    document.body.classList.add('article');
   }
 }
 
@@ -583,7 +649,7 @@ function buildArticleHeader(mainEl) {
   const articleHeaderBlockEl = buildBlock('article-header', [
     [h1],
     [`<p>${readTime}</p><p>${publicationDate}</p>`],
-    [picture.closest('p')],
+    [picture.closest('p') || `<p>${createOptimizedPicture('../default-meta-image.png', '', true).outerHTML}</p>`],
   ]);
   div.append(articleHeaderBlockEl);
   mainEl.prepend(div);
@@ -653,6 +719,7 @@ export function decorateMain(main) {
   decoratePictures(main);
   removeStylingFromImages(main);
   makeLinksRelative(main);
+  decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
@@ -691,4 +758,8 @@ async function loadLazy(doc) {
  */
 function loadDelayed() {
   // load anything that can be postponed to the latest here
+  setTimeout(() => {
+    // eslint-disable-next-line
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-N6GZQ6');
+  }, 4000);
 }

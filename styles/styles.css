@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-:root {
+ :root {
   --background-color: 255, 255, 255;
   --color-red: #f40000;
   --link-color: 242, 0, 0;
@@ -20,7 +20,7 @@
 }
 
 html {
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -134,17 +134,17 @@ main button:hover {
   background-color: rgba(var(--link-color) / 100%);
   cursor: pointer;
 }
-
+/* stylelint-disable */
 main input, main select {
-  border: 1px solid rgba(var(--text-color) / 50%);
+  border: 1px solid rgba(var(--text-color), 50%);
   color: rgb(var(--text-color));
-  background-color: rgba(var(--background-color) / 50%);
+  background-color: rgba(var(--background-color), 50%);
 }
 
 main select:hover, main input:hover {
-  border: 1px solid rgba(var(--text-color) / 90%);
+  border: 1px solid rgba(var(--text-color), 90%);
 }
-
+/* stylelint-enable */
 main .section-wrapper {
   padding: 0 2rem;
 }
