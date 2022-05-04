@@ -629,7 +629,6 @@ function decorateBrandStyle(main) {
 }
 
 function setTheme() {
-  console.log('setting theme');
   const theme = getMetadata('theme');
   if (theme) {
     const themeClass = toClassName(theme);
