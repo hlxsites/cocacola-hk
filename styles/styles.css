@@ -199,32 +199,52 @@ main img {
   font-size: 16px;
 }
 
-main.brand-barista-bros {
-  --brand-color: #e87722;
+main.brand-aquarius {
+  --brand-color: #28408B;
+}
+
+main.brand-ath {
+  --brand-color: #6B8E24;
+}
+
+main.brand-bonaqua {
+  --brand-color: #47C8E8;
 }
 
 main.brand-coca-cola {
   --brand-color: #f40000;
 }
 
-main.brand-sprite {
-  --brand-color: #11a753;
+main.brand-craftea {
+  --brand-color: #D0A558;
 }
 
 main.brand-fanta {
   --brand-color: #f7941e;
 }
 
-main.brand-fuze-tea {
-  --brand-color: #91d6ac;
+main.brand-glaceau-vitaminwater {
+  --brand-color: #000;
 }
 
-main.brand-lift {
-  --brand-color: #fbd304;
+main.brand-healthworks {
+  --brand-color: #CBD601;
+}
+
+main.brand-minute-maid {
+  --brand-color: #000;
 }
 
 main.brand-schweppes {
   --brand-color: #ffcd00;
+}
+
+main.brand-sprite {
+  --brand-color: #11a753;
+}
+
+main.brand-yangguang {
+  --brand-color: #242222;
 }
 
 /* above the fold CSS goes here to squash CLS */
