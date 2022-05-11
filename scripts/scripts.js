@@ -665,6 +665,39 @@ function buildHeroBlock(main) {
   }
 }
 
+/**
+ * returns an image caption of a picture elements
+ * @param {Element} picture picture element
+ */
+function getImageCaption(picture) {
+  const parentEl = picture.parentNode;
+  const parentSiblingEl = parentEl.nextElementSibling;
+  return (parentSiblingEl && parentSiblingEl.firstChild.nodeName === 'EM' ? parentSiblingEl : undefined);
+}
+
+/**
+ * builds images blocks from default content.
+ * @param {Element} mainEl The container element
+ */
+function buildImageBlocks(mainEl) {
+  // select all non-featured, default (non-images block) images
+  const imgs = [...mainEl.querySelectorAll(':scope > div > p > picture')];
+  let lastImagesBlock;
+  imgs.forEach((img) => {
+    const parent = img.parentNode;
+    const imgBlock = buildBlock('images', {
+      elems: [img.cloneNode(true), getImageCaption(img)],
+    });
+    if (parent.parentNode) {
+      parent.replaceWith(imgBlock);
+      lastImagesBlock = imgBlock;
+    } else {
+      // same parent, add image to last images block
+      lastImagesBlock.firstChild.append(imgBlock.firstChild.firstChild);
+    }
+  });
+}
+
 function loadHeader(header) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
@@ -702,6 +735,7 @@ function buildAutoBlocks(main) {
   try {
     if (document.body.classList.contains('article')) buildArticleHeader(main);
     buildHeroBlock(main);
+    buildImageBlocks(main);
     addLoadTemplateBlock(main);
   } catch (error) {
     // eslint-disable-next-line no-console

@@ -195,6 +195,28 @@ main img {
   }
 }
 
+/* caption styling */
+main .figure {
+  margin: 0;
+}
+
+main .figure .caption {
+  margin-top: 16px !important;
+  text-align: left;
+  font-style: italic;
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 900px) {
+  main .figure .caption {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .article main {
   font-size: 16px;
 }
